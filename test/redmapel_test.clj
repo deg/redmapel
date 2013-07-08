@@ -1,6 +1,6 @@
-(ns redmapel.core-test
+(ns redmapel-test
   (:require [clojure.test :refer :all]
-            [redmapel.core :refer :all]))
+            [redmapel :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."
