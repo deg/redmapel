@@ -39,3 +39,44 @@
       (testing "Edge cases"
         (is (= (node-path []) []))
         (is (= (value-path []) [:value]))))))
+
+
+
+(def test-history
+  "Persistent store for testing watchers."
+  (atom []))
+
+(defn clear-test-history
+  "Clear the test history. Typically called at start of test."
+  []
+  (reset! test-history []))
+
+(defn record-history
+  "Toy watch function. Just adds some info to the test history."
+  [node path old new]
+  (swap! test-history conj [path old new]))
+
+(defn only-numbers
+  "Toy filtering watch function. Allow only numeric data."
+  [node path old new]
+  (number? new))
+
+(deftest node-watchers
+  (let [state-tree (-> (make-node)
+                       (node-assoc [:a] "A val")
+                       (node-assoc [:b] "B val")
+                       (node-assoc [:a :b] "A B val")
+                       (node-assoc [:a :c] "A C val")
+                       (node-assoc [:b :a] "B A val")
+                       (node-watch [:a] :after record-history)
+                       (node-watch [:a :b] :before only-numbers))]
+    (testing "watch nodes"
+      (clear-test-history)
+      (-> state-tree
+          (node-assoc [:a] "one")       ;; Should enter history.
+          (node-assoc [:b] "two")       ;; Not under :a, should not enter history.
+          (node-assoc [:a :b] "three")  ;; Not a number, should not enter history.
+          (node-assoc [:a :b] 4))       ;; Should enter history.
+      (is (= @test-history
+             [[[:a]    "A val"   "one"]
+              [[:a :b] "A B val" 4]])))))
