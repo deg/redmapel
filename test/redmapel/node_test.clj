@@ -19,7 +19,10 @@
       (is (= 17  (node-get node-mix [:a :c :d])))
       (is (= nil (node-get node-mix [])))
       (is (= 11  (node-get node-root-11 [])))
-      (is (= nil (node-get node-root-11 [:a]))))))
+      (is (= nil (node-get node-root-11 [:a]))))
+    (let [changed-node (node-assoc node-mix [:a :c :d] "Changed!")]
+      (is (= 17         (node-get node-mix [:a :c :d])))
+      (is (= "Changed!" (node-get changed-node [:a :c :d]))))))
 
 
 (deftest node-internals
