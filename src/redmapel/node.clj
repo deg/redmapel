@@ -15,18 +15,22 @@
             [degel.cljutil.devutils :as dev]))
 
 (defn make-node
-  "Create a new root node. In principle, this should also be used for every internal
-   node in the tree too, but that does not play well with my use of assoc-in and friends.
+  "Create a new root node. In principle, this should also be used for every
+   internal node in the tree too, but that does not play well with my use of
+   assoc-in and friends.
 
-  It would be nice to use defrecord here but, again, that does not play with assoc-in. (The problem is
-  that assoc-in automatically creates new internal nodes as simple maps).
+  It would be nice to use defrecord here but, again, that does not play with
+  assoc-in. (The problem is that assoc-in automatically creates new internal
+  nodes as simple maps).
 
   Each node contains the following keys:
   - :value - The value stored at this node
-  - :path - Path to this node. The vector of keys used to access this value. This backpointer
-            is here primarily for debugging and diagnostic. It may disappear someday.
+  - :path - Path to this node. The vector of keys used to access this
+            value. This backpointer is here primarily for debugging and
+            diagnostic. It may disappear someday.
   - :children - Children of this node. Maps next path elements to nodes.
-  - :watchers - Nested map of functions to be alerted on a change to this node or any of its descendants."  
+  - :watchers - Nested map of functions to be alerted on a change to this node
+            or any of its descendants."
   []
   {})
 
@@ -46,7 +50,8 @@
 
 
 (defn- node-path
-  "Private implementation-dependent sequence (e.g. for assoc-in) to an internal node."
+  "Private implementation-dependent sequence (e.g. for assoc-in) to an internal
+  node."
   [path]
   (vec (interleave (repeat :children) path)))
 
@@ -60,7 +65,8 @@
   (-> path node-path (conj :path)))
 
 (defn- watchers-path [path]
-  "Implementation-dependent sequence to the watchers list held in an internal node."
+  "Implementation-dependent sequence to the watchers list held in an internal
+   node."
   (-> path node-path (conj :watchers)))
 
 
@@ -80,10 +86,12 @@
 
 
 (defn- partition-pairs
-  "Utility function, should move somewhere. Also needs a better name. Compare with utils/group-results.
+  "Utility function, should move somewhere. Also needs a better name. Compare
+   with utils/group-results.
 
    Organize a sequence of [key value] items, grouping by key. E.g.,
-   (partition-pairs [[:o 1] [:e 2] [:o 3] [:e 4] [:o 5] [:e 6]]) ==> {:e (2 4 6), :o (1 3 5)}
+   (partition-pairs [[:o 1] [:e 2] [:o 3] [:e 4] [:o 5] [:e 6]])
+    ==> {:e (2 4 6), :o (1 3 5)}
 "
   [l]
   (into {}
@@ -119,11 +127,12 @@
 
 
 (defn node-watch
-  "Register a watch function that will be called whenever a value is changed, at or below
-   the specified path.
+  "Register a watch function that will be called whenever a value is changed,
+   at or below the specified path.
 
    Watch types:
-   :before - Called before the assoc occurs. Can return false to abort the operation.
+   :before - Called before the assoc occurs. Can return false to abort the
+           operation.
    :after - Called after the assoc occurs. Used for side-effects."
   [node path watch-type watch-fn]
   (update-in node (watchers-path path) conj [watch-type watch-fn]))
