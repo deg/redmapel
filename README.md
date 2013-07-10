@@ -1,22 +1,22 @@
 # redmapel
 
-Redmapel is intended to be a simple, single-purpose, library, designed
-to let you easily manage a tree of related values, and set triggers to
-fire when elements of the tree have "changed". Of course "changed" is
-a funny term in Clojure's persistent state world, so read on.
+Redmapel is intended to be a simple single-purpose library. It is
+designed to let you easily manage a tree of related values and set
+triggers to fire when elements of the tree have changed. Of course
+"changed" is a funny term in Clojure's persistent state world, so read
+on.
 
-## History and naming
+## History and Naming
 
-Redmapel is small state tree library, named after [Red
-Maples](http://www.publicdomainpictures.net/view-image.php?image=12819&picture=red-maple-tree),
+Redmapel is small state tree library, named after the stunning [red
+maple
+tree](http://www.publicdomainpictures.net/view-image.php?image=12819&picture=red-maple-tree),
 the state tree of Rhode Island. (groan!)
 
 The misspelling is deliberate, to make it easier to search for
-Redmapel.
-
-Pronounciation: whatever you like in the privacy of your own room, but
-I favor rhyming with the French
-m'appelle. [see video](http://www.youtube.com/watch?v=5H59Py7KApU).
+Redmapel. Pronounciation: whatever you like in the privacy of your own
+room, but I favor rhyming with the French m'appelle. [see
+video](http://www.youtube.com/watch?v=5H59Py7KApU).
 
 ## Background
 
@@ -26,7 +26,7 @@ and without all of Pedestal's learning curve.
 
 ## Usage
 
-TBD. For now: use the source, Luke.
+TBD. For now use the source, Luke.
 
 ## License
 
