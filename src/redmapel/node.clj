@@ -1,54 +1,108 @@
+;;; Copyright (c) David Goldfarb. All rights reserved.
+;;; Contact info: deg@degel.com
+;;;
+;;; The use and distribution terms for this software are covered by the Eclipse
+;;; Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php) which can
+;;; be found in the file epl-v10.html at the root of this distribution.
+;;; By using this software in any fashion, you are agreeing to be bound by the
+;;; terms of this license.
+;;; You must not remove this notice, or any other, from this software.
+
 (ns redmapel.node
   (:require [clojure.pprint :as pp]
+            [degel.cljutil.utils :as utils]
             [degel.cljutil.devutils :as dev]))
 
-(defn make-node []
+(defn make-node
+  "Create a new root node. In principle, this should also be used for every internal
+   node in the tree too, but that does not play well with my use of assoc-in and friends.
+
+  It would be nice to use defrecord here but, again, that does not play with assoc-in. (The problem is
+  that assoc-in automatically creates new internal nodes as simple maps).
+
+  Each node contains the following keys:
+  - :value - The value stored at this node
+  - :path - Path to this node. The vector of keys used to access this value. This backpointer
+            is here primarily for debugging and diagnostic. It may disappear someday.
+  - :children - Children of this node. Maps next path elements to nodes.
+  - :watchers - Nested map of functions to be alerted on a change to this node or any of its descendants."  
+  []
   {})
 
 
-(defn dump-node
+(defn describe-node
+  "Print the contents of a node tree in human-readable form"
   ([node]
-     (dump-node node []))
+     (describe-node node []))
   ([node path]
-     (pp/cl-format true "At ~S~@[ (but claims ~S)~] ~S~%"
+     (pp/cl-format true "~S~@[ (but claims ~S)~] ~8,8T- ~S ~8,8T~S~%"
                    path
                    (and (not= path (:path node)) (:path node))
-                   (:value node))
+                   (:value node)
+                   (map (comp type second) (:watchers node)))
      (doseq [[key child] (seq (:children node))]
-       (dump-node child (conj path key)))))
+       (describe-node child (conj path key)))))
 
 
-(defn- node-path [path]
+(defn- node-path
+  "Private implementation-dependent sequence (e.g. for assoc-in) to an internal node."
+  [path]
   (vec (interleave (repeat :children) path)))
 
-(defn- value-path [path]
+(defn- value-path
+  "Implementation-dependent sequence to the value held in an internal node."
+  [path]
   (-> path node-path (conj :value)))
 
 (defn- path-path [path]
+  "Implementation-dependent sequence to the path held in an internal node."
   (-> path node-path (conj :path)))
 
 (defn- watchers-path [path]
+  "Implementation-dependent sequence to the watchers list held in an internal node."
   (-> path node-path (conj :watchers)))
 
 
-(defn node-get [node path]
+(defn node-get
+  "Get a value stored in the tree, keyed by path.
+   Example (node-get my-root [:users :account-info :user-id])"
+  [node path]
   (get-in node (value-path path)))
 
-(defn- heads [l]
+
+(defn- heads
+  "Utility function, should move somewhere.
+   Return the partial heads of a sequence. E.g.,
+   (heads (range 3)) ==> ([] [0] [0 1] [0 1 2])"
+  [l]
   (reductions conj [] l))
 
-(defn- partition-pairs [l]
+
+(defn- partition-pairs
+  "Utility function, should move somewhere. Also needs a better name. Compare with utils/group-results.
+
+   Organize a sequence of [key value] items, grouping by key. E.g.,
+   (partition-pairs [[:o 1] [:e 2] [:o 3] [:e 4] [:o 5] [:e 6]]) ==> {:e (2 4 6), :o (1 3 5)}
+"
+  [l]
   (into {}
         (map #(vector (ffirst %) (map second %))
-             (partition-by first l))))
+             (partition-by first (sort-by first l)))))
 
-(defn watchers [node path]
+
+(defn watchers
+  "Return a map of all the watchers observing a node, organized by watch type.
+   Note that this includes watchers on ancestor nodes."
+  [node path]
   (partition-pairs
    (mapcat #(get-in node (watchers-path %))
            (heads path))))
 
 
-(defn node-assoc [node path value]
+(defn node-assoc
+  "Add a value to the tree, keyed by path.
+   Example: (node-assoc my-root [:users :account-info :user-id] \"David\")"
+  [node path value]
   (let [old-value (node-get node path)]
     (if (= old-value value)
       node
@@ -63,16 +117,12 @@
           node)))))
 
 
-(defn toy-watch [node path old new]
-  (dev/dbg "Watch" (str "Changed " path " from " old " to " new)))
-
-(defn toy-pred [node path old new]
-  (even? new))
-
-
 (defn node-watch
-  "Watch types:
-   :before - can return false to abort the operation
-   :after - just for side-effects"
+  "Register a watch function that will be called whenever a value is changed, at or below
+   the specified path.
+
+   Watch types:
+   :before - Called before the assoc occurs. Can return false to abort the operation.
+   :after - Called after the assoc occurs. Used for side-effects."
   [node path watch-type watch-fn]
   (update-in node (watchers-path path) conj [watch-type watch-fn]))
