@@ -75,7 +75,7 @@
   The function `f` is called when anyone tries to modify the tree at path,
   before the modification actually occurs . Note, that this watches the entire
   subtree below path. That is, if the path argument is `[:a :b]`, `f` will be
-  called on `(put! tree [:a :b]) or (put! tree [:a :b :c :d])`.
+  called as a result of `(put! tree [:a :b]) or (put! tree [:a :b :c :d])`.
 
   The arguments passed to the function are `tree`, `path`, `old-value`, and
   `new-value`. Note that the path is of the actual value being changed, which
@@ -94,7 +94,7 @@
   The function `f` is called when anyone modifies the tree at path, immediately
   after the modification actually occurs . Note, that this watches the entire
   subtree below path. That is, if the path argument is `[:a :b]`, `f` will be
-  called on `(put! tree [:a :b]) or (put! tree [:a :b :c :d])`.
+  called as a result of `(put! tree [:a :b]) or (put! tree [:a :b :c :d])`.
 
   The arguments passed to the function are `tree`, `path`, `old-value`, and
   `new-value`. Note that the path is of the actual value being changed, which
