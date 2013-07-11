@@ -1,4 +1,4 @@
-;;; Copyright (c) David Goldfarb. All rights reserved.
+;;; Copyright (c) 2013 David Goldfarb. All rights reserved.
 ;;; Contact info: deg@degel.com
 ;;;
 ;;; The use and distribution terms for this software are covered by the Eclipse
@@ -17,4 +17,4 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
 
                  ;; Degel's Clojure utility library
-                 [degel-clojure-utils "0.1.3"]])
+                 [degel-clojure-utils "0.1.4"]])
