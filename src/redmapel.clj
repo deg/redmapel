@@ -51,6 +51,14 @@
   (swap! rml-tree rml-node/put path value))
 
 
+(defn update!
+  "Modify a value in the state tree. Path is a vector of identifiers.
+
+  Example: (put! tree [:users :account-info :user-id] \"David\")"
+  [rml-tree path f & args]
+  (apply swap! rml-tree rml-node/update path f args))
+
+
 (defn guard! [rml-tree path id f]
   "Set up a guard function.
 

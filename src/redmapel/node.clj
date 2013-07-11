@@ -126,9 +126,11 @@
           node)))))
 
 (defn update
-  [node path f value]
+  "Modify a value in the tree, keyed by path.
+   Example: (update my-root [:users :account-info :login-attempts] inc)"
+  [node path f & args]
   (let [old-value (fetch node path)]
-    (put node path (f old-value value))))
+    (put node path (apply f old-value args))))
 
 
 (defn watch
@@ -136,9 +138,9 @@
    at or below the specified path.
 
    Watch types:
-   :before - Called before the assoc occurs. Can return false to abort the
+   :before - Called before the change occurs. Can return false to abort the
            operation.
-   :after - Called after the assoc occurs. Used for side-effects."
+   :after - Called after the change occurs. Used for side-effects."
   [node path id watch-type watch-fn]
   (-> node
       (update-in (watchers-path path) conj [watch-type watch-fn])
