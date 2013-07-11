@@ -79,40 +79,13 @@
   (get-in node (value-path path)))
 
 
-(defn- heads
-  "Utility function, should move into a different project.
-
-   Return the partial heads of a sequence.
-
-   ex: `(heads (range 3))`
-
-  -> `([] [0] [0 1] [0 1 2])`"
-  [l]
-  (reductions conj [] l))
-
-
-(defn- partition-pairs
-  "Utility function, should move somewhere. Also needs a better name. Compare
-   with `utils/group-results`.
-
-   Organize a sequence of `[key value]` items, grouping by key.
-
-   ex: `(partition-pairs [[:o 1] [:e 2] [:o 3] [:e 4] [:o 5] [:e 6]])`
-
-   -> ` {:e (2 4 6), :o (1 3 5)}`"
-  [l]
-  (into {}
-        (map #(vector (ffirst %) (map second %))
-             (partition-by first (sort-by first l)))))
-
-
 (defn watchers
   "Return a map of all the watchers observing a node, organized by watch type.
    Note that this includes watchers on ancestor nodes."
   [node path]
-  (partition-pairs
-   (mapcat #(get-in node (watchers-path %))
-           (heads path))))
+  (utils/group-values-by-keys (mapcat #(get-in node (watchers-path %))
+                                      (utils/heads path))
+                              first second))
 
 
 (defn put
@@ -132,6 +105,7 @@
               (f new-node path old-value value))
             new-node)
           node)))))
+
 
 (defn update
   "Modify a value in the tree, keyed by path.
@@ -153,5 +127,8 @@
    * :after - Called after the change occurs. Used for side-effects."
   [node path id watch-type watch-fn]
   (-> node
-      (update-in (watchers-path path) conj [watch-type watch-fn])
+      (update-in (watchers-path path) conj [watch-type watch-fn id])
       (update ['all-watches id] conj [watch-type watch-fn])))
+
+(defn unwatch [node id]
+  )

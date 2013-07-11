@@ -19,7 +19,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
 
                  ;; Degel's Clojure utility library
-                 [degel-clojure-utils "0.1.4"]]
+                 [degel-clojure-utils "0.1.5"]]
 
   :profiles {:dev
              { :plugins [[lein-marginalia "0.7.1"]]}})

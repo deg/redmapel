@@ -52,16 +52,6 @@
         (is (= (value-path []) [:value]))))))
 
 
-(deftest utility-internals
-  ;; These will probably move to a different namespace someday.
-  (let [heads #'redmapel.node/heads
-        partition-pairs #'redmapel.node/partition-pairs]
-    (testing "internal utilities"
-      (is (= (heads (range 3)) '([] [0] [0 1] [0 1 2])))
-      (is (= (partition-pairs [[:o 1] [:e 2] [:o 3] [:e 4] [:o 5] [:e 6]])
-             '{:e (2 4 6), :o (1 3 5)})))))
-
-
 (def test-history
   "Persistent store for testing watchers."
   (atom []))
