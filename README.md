@@ -26,7 +26,7 @@ and without all of Pedestal's learning curve.
 
 ## Usage
 
-TBD. For now use the source, Luke.
+TBD. For now use the source, Luke.  `lein marg` to format the source comments.
 
 ## License
 

@@ -17,26 +17,27 @@
 (defn make-node
   "Create a new root node. In principle, this should also be used for every
    internal node in the tree too, but that does not play well with my use of
-   assoc-in and friends.
+   `assoc-in` and friends.
 
-  It would be nice to use defrecord here but, again, that does not play with
-  assoc-in. (The problem is that assoc-in automatically creates new internal
-  nodes as simple maps).
+  It would be nice to use `defrecord` here but, again, that does not play with
+  `assoc-in`. (The problem is that `assoc-in` automatically creates new
+  internal nodes as simple maps).
 
   Each node contains the following keys:
-  - :value - The value stored at this node
-  - :path - Path to this node. The vector of keys used to access this
+
+  * `:value` The value stored at this node
+  * `:path` Path to this node. The vector of keys used to access this
             value. This backpointer is here primarily for debugging and
             diagnostic. It may disappear someday.
-  - :children - Children of this node. Maps next path elements to nodes.
-  - :watchers - Nested map of functions to be alerted on a change to this node
+  * `:children` Children of this node. Maps next path elements to nodes.
+  * `:watchers` Nested map of functions to be alerted on a change to this node
             or any of its descendants."
   []
   {})
 
 
 (defn describe-node
-  "Print the contents of a node tree in human-readable form"
+  "Print the contents of a node tree in human-readable form."
   ([node]
      (describe-node node []))
   ([node path]
@@ -72,27 +73,33 @@
 
 (defn fetch
   "Fetch a value stored in the tree, keyed by path.
-   Example (fetch my-root [:users :account-info :user-id])"
+
+   ex: `(fetch my-root [:users :account-info :user-id])`"
   [node path]
   (get-in node (value-path path)))
 
 
 (defn- heads
-  "Utility function, should move somewhere.
-   Return the partial heads of a sequence. E.g.,
-   (heads (range 3)) ==> ([] [0] [0 1] [0 1 2])"
+  "Utility function, should move into a different project.
+
+   Return the partial heads of a sequence.
+
+   ex: `(heads (range 3))`
+
+  -> `([] [0] [0 1] [0 1 2])`"
   [l]
   (reductions conj [] l))
 
 
 (defn- partition-pairs
   "Utility function, should move somewhere. Also needs a better name. Compare
-   with utils/group-results.
+   with `utils/group-results`.
 
-   Organize a sequence of [key value] items, grouping by key. E.g.,
-   (partition-pairs [[:o 1] [:e 2] [:o 3] [:e 4] [:o 5] [:e 6]])
-    ==> {:e (2 4 6), :o (1 3 5)}
-"
+   Organize a sequence of `[key value]` items, grouping by key.
+
+   ex: `(partition-pairs [[:o 1] [:e 2] [:o 3] [:e 4] [:o 5] [:e 6]])`
+
+   -> ` {:e (2 4 6), :o (1 3 5)}`"
   [l]
   (into {}
         (map #(vector (ffirst %) (map second %))
@@ -110,7 +117,8 @@
 
 (defn put
   "Add a value to the tree, keyed by path.
-   Example: (put my-root [:users :account-info :user-id] \"David\")"
+
+   ex. `(put my-root [:users :account-info :user-id] \"David\")`"
   [node path value]
   (let [old-value (fetch node path)]
     (if (= old-value value)
@@ -127,7 +135,8 @@
 
 (defn update
   "Modify a value in the tree, keyed by path.
-   Example: (update my-root [:users :account-info :login-attempts] inc)"
+
+   ex: `(update my-root [:users :account-info :login-attempts] inc)`"
   [node path f & args]
   (let [old-value (fetch node path)]
     (put node path (apply f old-value args))))
@@ -138,9 +147,10 @@
    at or below the specified path.
 
    Watch types:
-   :before - Called before the change occurs. Can return false to abort the
+
+   * :before - Called before the change occurs. Can return false to abort the
            operation.
-   :after - Called after the change occurs. Used for side-effects."
+   * :after - Called after the change occurs. Used for side-effects."
   [node path id watch-type watch-fn]
   (-> node
       (update-in (watchers-path path) conj [watch-type watch-fn])
