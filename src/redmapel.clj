@@ -40,7 +40,7 @@
 
    Example: (fetch tree [:users :account-info :user-id])"
   [rml-tree path]
-  (rml-node/node-get @rml-tree path))
+  (rml-node/fetch @rml-tree path))
 
 
 (defn put!
@@ -48,10 +48,10 @@
 
   Example: (put! tree [:users :account-info :user-id] \"David\")"
   [rml-tree path value]
-  (swap! rml-tree rml-node/node-assoc path value))
+  (swap! rml-tree rml-node/put path value))
 
 
-(defn guard! [rml-tree path f]
+(defn guard! [rml-tree path id f]
   "Set up a guard function.
 
   The function f is called when anyone tries to modify the tree at path, before
@@ -66,7 +66,7 @@
   If f returns falsey, it will prevent the modification. If multiple guards are
   in place, any one returning falsey is sufficient to prevent the
   modification."
-  (swap! rml-tree rml-node/node-watch path :before f))
+  (swap! rml-tree rml-node/watch path id :before f))
 
 
 (defn alert!
@@ -82,5 +82,5 @@
   might be far below the path passed to guard!.
 
   The return value from f is ignored."
-  [rml-tree path f]
-  (swap! rml-tree rml-node/node-watch path :after f))
+  [rml-tree path id f]
+  (swap! rml-tree rml-node/watch path id :after f))

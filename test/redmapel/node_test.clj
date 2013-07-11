@@ -17,23 +17,23 @@
   (testing "Empty node"
     (is (empty? (make-node))))
   (let [empty-node (make-node)
-        node-a-b-42 (node-assoc empty-node [:a :b] 42)
-        node-a-c-d-17 (node-assoc empty-node [:a :c :d] 17)
-        node-mix (node-assoc node-a-b-42 [:a :c :d] 17)
-        node-root-11 (node-assoc empty-node [] 11)]
+        node-a-b-42 (put empty-node [:a :b] 42)
+        node-a-c-d-17 (put empty-node [:a :c :d] 17)
+        node-mix (put node-a-b-42 [:a :c :d] 17)
+        node-root-11 (put empty-node [] 11)]
     (testing "node assoc and get"
-      (is (= 42  (node-get node-a-b-42 [:a :b])))
-      (is (= nil (node-get node-a-b-42 [:a])))
-      (is (= nil (node-get node-a-b-42 [:a :c])))
-      (is (= 17  (node-get node-a-c-d-17 [:a :c :d])))
-      (is (= 42  (node-get node-mix [:a :b])))
-      (is (= 17  (node-get node-mix [:a :c :d])))
-      (is (= nil (node-get node-mix [])))
-      (is (= 11  (node-get node-root-11 [])))
-      (is (= nil (node-get node-root-11 [:a]))))
-    (let [changed-node (node-assoc node-mix [:a :c :d] "Changed!")]
-      (is (= 17         (node-get node-mix [:a :c :d])))
-      (is (= "Changed!" (node-get changed-node [:a :c :d]))))))
+      (is (= 42  (fetch node-a-b-42 [:a :b])))
+      (is (= nil (fetch node-a-b-42 [:a])))
+      (is (= nil (fetch node-a-b-42 [:a :c])))
+      (is (= 17  (fetch node-a-c-d-17 [:a :c :d])))
+      (is (= 42  (fetch node-mix [:a :b])))
+      (is (= 17  (fetch node-mix [:a :c :d])))
+      (is (= nil (fetch node-mix [])))
+      (is (= 11  (fetch node-root-11 [])))
+      (is (= nil (fetch node-root-11 [:a]))))
+    (let [changed-node (put node-mix [:a :c :d] "Changed!")]
+      (is (= 17         (fetch node-mix [:a :c :d])))
+      (is (= "Changed!" (fetch changed-node [:a :c :d]))))))
 
 
 (deftest node-internals
@@ -81,22 +81,22 @@
   [node path old new]
   (number? new))
 
-(deftest node-watchers
+(deftest test-watchers
   (let [state-tree (-> (make-node)
-                       (node-assoc [:a] "A val")
-                       (node-assoc [:b] "B val")
-                       (node-assoc [:a :b] "A B val")
-                       (node-assoc [:a :c] "A C val")
-                       (node-assoc [:b :a] "B A val")
-                       (node-watch [:a] :after record-history)
-                       (node-watch [:a :b] :before only-numbers))]
+                       (put [:a] "A val")
+                       (put [:b] "B val")
+                       (put [:a :b] "A B val")
+                       (put [:a :c] "A C val")
+                       (put [:b :a] "B A val")
+                       (watch [:a] :whatever :after record-history)
+                       (watch [:a :b] :whatever :before only-numbers))]
     (testing "watch nodes"
       (clear-test-history)
       (-> state-tree
-          (node-assoc [:a] "one")       ;; Should enter history.
-          (node-assoc [:b] "two")       ;; Not under :a, should not enter history.
-          (node-assoc [:a :b] "three")  ;; Not a number, should not enter history.
-          (node-assoc [:a :b] 4))       ;; Should enter history.
+          (put [:a] "one")       ;; Should enter history.
+          (put [:b] "two")       ;; Not under :a, should not enter history.
+          (put [:a :b] "three")  ;; Not a number, should not enter history.
+          (put [:a :b] 4))       ;; Should enter history.
       (is (= @test-history
              [[[:a]    "A val"   "one"]
               [[:a :b] "A B val" 4]])))))

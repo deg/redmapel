@@ -70,9 +70,9 @@
   (-> path node-path (conj :watchers)))
 
 
-(defn node-get
-  "Get a value stored in the tree, keyed by path.
-   Example (node-get my-root [:users :account-info :user-id])"
+(defn fetch
+  "Fetch a value stored in the tree, keyed by path.
+   Example (fetch my-root [:users :account-info :user-id])"
   [node path]
   (get-in node (value-path path)))
 
@@ -108,11 +108,11 @@
            (heads path))))
 
 
-(defn node-assoc
+(defn put
   "Add a value to the tree, keyed by path.
-   Example: (node-assoc my-root [:users :account-info :user-id] \"David\")"
+   Example: (put my-root [:users :account-info :user-id] \"David\")"
   [node path value]
-  (let [old-value (node-get node path)]
+  (let [old-value (fetch node path)]
     (if (= old-value value)
       node
       (let [{:keys [before after]} (watchers node path)]
@@ -125,8 +125,13 @@
             new-node)
           node)))))
 
+(defn update
+  [node path f value]
+  (let [old-value (fetch node path)]
+    (put node path (f old-value value))))
 
-(defn node-watch
+
+(defn watch
   "Register a watch function that will be called whenever a value is changed,
    at or below the specified path.
 
@@ -134,5 +139,7 @@
    :before - Called before the assoc occurs. Can return false to abort the
            operation.
    :after - Called after the assoc occurs. Used for side-effects."
-  [node path watch-type watch-fn]
-  (update-in node (watchers-path path) conj [watch-type watch-fn]))
+  [node path id watch-type watch-fn]
+  (-> node
+      (update-in (watchers-path path) conj [watch-type watch-fn])
+      (update ['all-watches id] conj [watch-type watch-fn])))

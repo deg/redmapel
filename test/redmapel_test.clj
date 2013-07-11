@@ -29,10 +29,11 @@
 
 (deftest guard
   (defmapel tree1)
-  (guard! tree1 [:a] (fn [_ _ _ new-value] (even? new-value)))
+  (guard! tree1 [:a] :whatever (fn [_ _ _ new-value] (even? new-value)))
   (put! tree1 [:a :a] 1)
   (put! tree1 [:a :b] 2)
   (is (= (fetch tree1 [:a]) nil))
   (is (= (fetch tree1 [:a :a]) nil))
   (is (= (fetch tree1 [:a :b]) 2))
-  (is (= (fetch tree1 [:a :c]) nil))))
+  (is (= (fetch tree1 [:a :c]) nil)))
+
