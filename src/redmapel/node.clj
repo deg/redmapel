@@ -128,7 +128,15 @@
   [node path id watch-type watch-fn]
   (-> node
       (update-in (watchers-path path) conj [watch-type watch-fn id])
-      (update ['all-watches id] conj [watch-type watch-fn])))
+      (update ['all-watches id] conj [path watch-type])))
 
 (defn unwatch [node id]
-  )
+  (let [hints  (fetch node ['all-watches id])
+        node (put node ['all-watches id] nil)]
+    (loop [hints hints, node node]
+      (if (empty? hints)
+        node
+        (let [[[path watch-type] & more-hints] hints]
+          (recur more-hints
+                 (update-in node (watchers-path path)
+                            (fn [old] (remove #(= (utils/third %) id) old)))))))))
