@@ -36,10 +36,10 @@
   {})
 
 
-(defn describe-node
+(defn describe
   "Print the contents of a node tree in human-readable form."
   ([node]
-     (describe-node node []))
+     (describe node []))
   ([node path]
      (pp/cl-format true "~S~@[ (but claims ~S)~] ~8,8T- ~S ~8,8T~S~%"
                    path
@@ -47,7 +47,7 @@
                    (:value node)
                    (map (comp type second) (:watchers node)))
      (doseq [[key child] (seq (:children node))]
-       (describe-node child (conj path key)))))
+       (describe child (conj path key)))))
 
 
 (defn- node-path
