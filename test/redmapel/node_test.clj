@@ -71,6 +71,9 @@
   [node path old new]
   (number? new))
 
+(defn dummy1 [_ _ _ _] true)
+(defn dummy2 [_ _ _ _] true)
+
 (deftest test-watchers
   (let [state-tree (-> (make-node)
                        (put [:a] "A val")
@@ -78,15 +81,25 @@
                        (put [:a :b] "A B val")
                        (put [:a :c] "A C val")
                        (put [:b :a] "B A val")
-                       (watch [:a] :whatever :after record-history)
-                       (watch [:a :b] :whatever :before only-numbers))]
+                       (watch [:a] :whatever :after #'record-history)
+                       (watch [:a :b] :whatever :before #'only-numbers))]
     (testing "watch nodes"
       (clear-test-history)
       (-> state-tree
-          (put [:a] "one")       ;; Should enter history.
-          (put [:b] "two")       ;; Not under :a, should not enter history.
-          (put [:a :b] "three")  ;; Not a number, should not enter history.
-          (put [:a :b] 4))       ;; Should enter history.
+          (put [:a] "one")      ;; Should enter history.
+          (put [:b] "two")      ;; Not under :a, should not enter history.
+          (put [:a :b] "three") ;; Not a number, should not enter history.
+          (put [:a :b] 4))      ;; Should enter history.
       (is (= @test-history
              [[[:a]    "A val"   "one"]
-              [[:a :b] "A B val" 4]])))))
+              [[:a :b] "A B val" 4]])))
+    (testing "watchers"
+      (clear-test-history)
+      (is (seq (fetch state-tree ['all-watches :whatever])))
+      (let [state-tree (-> state-tree
+                           (watch [:a] :another :after #'dummy1)
+                           (watch [:a :b] :yet-another :after #'dummy2)
+                           (unwatch :whatever))]
+        (is (empty? (fetch state-tree ['all-watches :whatever])))
+        (is (= (watchers state-tree [:a]) {:after `(~#'dummy1)}))
+        (is (= (watchers state-tree [:a :b]) {:after `(~#'dummy1 ~#'dummy2)}))))))

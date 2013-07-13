@@ -120,6 +120,10 @@
   "Register a watch function that will be called whenever a value is changed,
    at or below the specified path.
 
+   id is an caller-supplied tag, that can later be passed to the unwatch
+   function to remove this watch. If multiple watches are created with the
+   same id, a single call to unwatch will remove all of them.
+
    Watch types:
 
    * :before - Called before the change occurs. Can return false to abort the
