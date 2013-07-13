@@ -72,18 +72,22 @@
 (defn guard!
   "### Set up a guard function
 
-  The function `f` is called when anyone tries to modify the tree at path,
-  before the modification actually occurs . Note, that this watches the entire
-  subtree below path. That is, if the path argument is `[:a :b]`, `f` will be
-  called as a result of `(put! tree [:a :b]) or (put! tree [:a :b :c :d])`.
+   The function `f` is called when anyone tries to modify the tree at path,
+   before the modification actually occurs . Note, that this watches the entire
+   subtree below path. That is, if the path argument is `[:a :b]`, `f` will be
+   called as a result of `(put! tree [:a :b]) or (put! tree [:a :b :c :d])`.
 
-  The arguments passed to the function are `tree`, `path`, `old-value`, and
-  `new-value`. Note that the path is of the actual value being changed, which
-  might be far below the path passed to `guard!`.
+   The arguments passed to the function are `tree`, `path`, `old-value`, and
+   `new-value`. Note that the path is of the actual value being changed, which
+   might be far below the path passed to `guard!`.
 
-  If `f` returns falsey, it will prevent the modification. If multiple guards are
-  in place, any one returning falsey is sufficient to prevent the
-  modification."
+   If `f` returns falsey, it will prevent the modification. If multiple guards are
+   in place, any one returning falsey is sufficient to prevent the
+   modification.
+
+   id is an caller-supplied tag, that can later be passed to the unwatch
+   function to remove this guard. If multiple guards and/or triggers are
+   created with the same id, a single call to unwatch will remove all of them."
   [rml-tree path id f]
   (swap! rml-tree rml-node/watch path id :before f))
 
@@ -91,15 +95,27 @@
 (defn alert!
   "### Set up a trigger function
 
-  The function `f` is called when anyone modifies the tree at path, immediately
-  after the modification actually occurs . Note, that this watches the entire
-  subtree below path. That is, if the path argument is `[:a :b]`, `f` will be
-  called as a result of `(put! tree [:a :b]) or (put! tree [:a :b :c :d])`.
+   The function `f` is called when anyone modifies the tree at path, immediately
+   after the modification actually occurs . Note, that this watches the entire
+   subtree below path. That is, if the path argument is `[:a :b]`, `f` will be
+   called as a result of `(put! tree [:a :b]) or (put! tree [:a :b :c :d])`.
 
-  The arguments passed to the function are `tree`, `path`, `old-value`, and
-  `new-value`. Note that the path is of the actual value being changed, which
-  might be far below the path passed to `alert!`.
+   The arguments passed to the function are `tree`, `path`, `old-value`, and
+   `new-value`. Note that the path is of the actual value being changed, which
+   might be far below the path passed to `alert!`.
 
-  The return value from `f` is ignored."
+   The return value from `f` is ignored.
+
+   id is an caller-supplied tag, that can later be passed to the unwatch
+   function to remove this guard. If multiple guards and/or triggers are
+   created with the same id, a single call to unwatch will remove all of them."
   [rml-tree path id f]
   (swap! rml-tree rml-node/watch path id :after f))
+
+
+(defn unwatch
+  "### Remove guard and/or trigger functions
+
+  Remove all guards or alerts that were created with the specified id."
+  [rml-tree id]
+  (swap! rml-tree rml-node/unwatch id))
