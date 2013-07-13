@@ -39,7 +39,7 @@
   "### Describe the tree
    Print a verbose description of the state tree's contents."
   [rml-tree]
-  (rml-node/describe-node @rml-tree))
+  (rml-node/describe @rml-tree))
 
 
 (defn fetch
