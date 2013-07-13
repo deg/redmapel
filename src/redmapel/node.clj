@@ -128,15 +128,20 @@
   [node path id watch-type watch-fn]
   (-> node
       (update-in (watchers-path path) conj [watch-type watch-fn id])
-      (update ['all-watches id] conj [path watch-type])))
+      (update ['all-watches id] conj path)))
 
-(defn unwatch [node id]
-  (let [hints  (fetch node ['all-watches id])
-        node (put node ['all-watches id] nil)]
-    (loop [hints hints, node node]
-      (if (empty? hints)
-        node
-        (let [[[path watch-type] & more-hints] hints]
-          (recur more-hints
-                 (update-in node (watchers-path path)
-                            (fn [old] (remove #(= (utils/third %) id) old)))))))))
+
+(defn unwatch
+  "Remove all the watch functions that were tagged with a particular id."
+  [node id]
+  ;; The logic here is a little bit tight, at least for my current level of
+  ;; comfort with clojure. So a comment is in order:
+  ;; We are using reduce to walk down the list of hints and remove the watch
+  ;; functions from each of the referenced locations.
+  ;; We also need to remove the hints. We could do this at the end, but the
+  ;; code is more compact if we do it first, like this.
+  (reduce (fn [node path]
+            (update-in node (watchers-path path)
+                       (fn [old] (remove #(= (utils/third %) id) old))))
+          (put node ['all-watches id] nil)
+          (fetch node ['all-watches id])))
