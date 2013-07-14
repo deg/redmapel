@@ -113,7 +113,7 @@
   (swap! rml-tree rml-node/watch path id :after f))
 
 
-(defn unwatch
+(defn unwatch!
   "### Remove guard and/or trigger functions
 
   Remove all guards or alerts that were created with the specified id."
