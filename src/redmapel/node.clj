@@ -10,9 +10,7 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 (ns redmapel.node
-  (:require [clojure.pprint :as pp]
-            [degel.cljutil.utils :as utils]
-            [degel.cljutil.devutils :as dev]))
+  (:require [degel.cljutil.utils :as utils]))
 
 (defn make-node
   "Create a new root node. In principle, this should also be used for every
@@ -41,11 +39,19 @@
   ([node]
      (describe node []))
   ([node path]
+
+     ;; No pprint yet in clojurescript
+     (when (or (:value node) (:watchers node))
+       ;; [TODO] cl-format tabbing was nice. Get it to work here too.
+       (println path "   " (:value node)
+                (map (comp type second) (:watchers node))))
+     #_
      (pp/cl-format true "~S~@[ (but claims ~S)~] ~8,8T- ~S ~8,8T~S~%"
                    path
                    (and (not= path (:path node)) (:path node))
                    (:value node)
                    (map (comp type second) (:watchers node)))
+
      (doseq [[key child] (seq (:children node))]
        (describe child (conj path key)))))
 

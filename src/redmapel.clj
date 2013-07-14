@@ -15,16 +15,13 @@
 
   Includes functions to create, access, and modify a redmapel state tree.
   For more info, see the readme file."
-  (:require [redmapel.node :as rml-node]
-            [degel.cljutil.devutils :as dev]))
+  (:require [redmapel.node :as rml-node]))
 
 
-(defmacro defmapel
-  "### Initialize a state tree"
-  ([rml-tree]
-     `(def ~rml-tree (atom (rml-node/make-node))))
-    ([doc rml-tree]
-     `(def ~rml-tree ~doc (atom (rml-node/make-node)))))
+(defn make-redmapel-tree
+  "### Return an atom that references a fresh state tree."
+  []
+  (atom (rml-node/make-node)))
 
 
 (defn empty!

@@ -15,7 +15,7 @@
 
 
 (deftest put-fetch
-  (defmapel tree1)
+  (def tree1 (make-redmapel-tree))
   (is (= (type tree1) clojure.lang.Atom))
   (put! tree1 [:a] 1)
   (put! tree1 [:a :b] 12)
@@ -28,7 +28,7 @@
   (is (= (fetch tree1 [:c]) nil)))
 
 (deftest guard
-  (defmapel tree1)
+  (def tree1 (make-redmapel-tree))
   (guard! tree1 [:a] :whatever (fn [_ _ _ new-value] (even? new-value)))
   (put! tree1 [:a :a] 1)
   (put! tree1 [:a :b] 2)
