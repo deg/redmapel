@@ -43,7 +43,9 @@
   "### Fetch a value from the state tree
    Path is a vector of identifiers.
 
-   ex: `(fetch tree [:users :account-info :user-id])`"
+   ex: `(fetch tree [:users :account-info :user-id])`
+
+   [TODO] take default value as optional arg (??)"
   [rml-tree path]
   (rml-node/fetch @rml-tree path))
 
@@ -82,7 +84,7 @@
    in place, any one returning falsey is sufficient to prevent the
    modification.
 
-   id is an caller-supplied tag, that can later be passed to the unwatch
+   id is a caller-supplied tag, that can later be passed to the unwatch
    function to remove this guard. If multiple guards and/or triggers are
    created with the same id, a single call to unwatch will remove all of them."
   [rml-tree path id f]
@@ -103,7 +105,7 @@
 
    The return value from `f` is ignored.
 
-   id is an caller-supplied tag, that can later be passed to the unwatch
+   id is a caller-supplied tag, that can later be passed to the unwatch
    function to remove this guard. If multiple guards and/or triggers are
    created with the same id, a single call to unwatch will remove all of them."
   [rml-tree path id f]
