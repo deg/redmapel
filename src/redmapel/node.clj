@@ -97,19 +97,40 @@
 (defn put
   "Add a value to the tree, keyed by path.
 
-   ex. `(put my-root [:users :account-info :user-id] \"David\")`"
-  [node path value]
+   ex. `(put my-root [:users :account-info :user-id] \"David\")`
+
+  The persister and unpersister arguments are for the sake of our
+  atomic wrapper in ../redmapel.clj. The problem they are solving is
+  that an after-method might also put something into the database.
+  The atom must be updated with the correct state tree after each
+  operation.
+  [TODO] In the future, this needs to be re-examined and perhaps be
+  replaced by either a queuing model (each put only happens after
+  the previous one completes and updates the atom) or an transactional
+  model (nested operations all succeed together and then all become
+  visible in the atom)."
+  [node path value & {:keys [persister unpersister]}]
   (let [old-value (fetch node path)]
     (if (= old-value value)
       node
       (let [{:keys [before after]} (watchers node path)]
         (if (every? #(% node path old-value value) before)
-          (let [new-node (assoc-in
-                          (assoc-in node (path-path path) path)
-                          (value-path path) value)]
-            (doseq [f after]
-              (f new-node path old-value value))
-            new-node)
+          (let [new-node
+                ;; (This ugly nested assoc-in is needed because we are storing
+                ;; both the value and the path into the tree)
+                (assoc-in
+                 (assoc-in node (path-path path) path)
+                 (value-path path) value)]
+            (if persister
+              (do
+                (persister new-node)
+                (doseq [f after]
+                  (f (unpersister) path old-value value))
+                (unpersister))
+              (do
+                (doseq [f after]
+                  (f new-node path old-value value))
+                new-node)))
           node)))))
 
 

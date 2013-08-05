@@ -56,7 +56,12 @@
 
    ex: `(put! tree [:users :account-info :user-id] \"David\")`"
   [rml-tree path value]
-  (swap! rml-tree rml-node/put path value))
+  ;; See commment at rml-node/put. This next line an awkward way
+  ;; of supporting nested puts. In a simpler world, it would be
+  ;; `(swap! rml-tree rml-node/put path value)`.
+  (rml-node/put @rml-tree path value
+                :persister #(reset! rml-tree %)
+                :unpersister (fn [] @rml-tree)))
 
 
 (defn update!
