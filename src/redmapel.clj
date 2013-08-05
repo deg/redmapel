@@ -10,12 +10,12 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 
-(ns redmapel
+(ns degel.redmapel
   "# Main redmapel namespace
 
   Includes functions to create, access, and modify a redmapel state tree.
   For more info, see the readme file."
-  (:require [redmapel.node :as rml-node]))
+  (:require [degel.redmapel.node :as rml-node]))
 
 
 (defn make-redmapel-tree

@@ -9,7 +9,7 @@
 ;;;
 ;;; You must not remove this notice, or any other, from this software.
 
-(ns redmapel.node
+(ns degel.redmapel.node
   (:require [degel.cljutil.utils :as utils]))
 
 (defn make-node
