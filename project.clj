@@ -9,7 +9,7 @@
 ;;;
 ;;; You must not remove this notice, or any other, from this software.
 
-(defproject redmapel "0.1.0"
+(defproject redmapel "0.1.1"
   :description "Redmapel manages trees of state."
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
