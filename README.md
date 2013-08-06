@@ -16,6 +16,9 @@ Redmapel. Pronounciation: whatever you like in the privacy of your own
 room, but I favor rhyming with the French m'appelle. [see
 video](http://www.youtube.com/watch?v=5H59Py7KApU).
 
+For the latest version, include `[degel.redmapel "0.1.3"]` in your
+`project.clj`.
+
 ## Background
 
 Redmapel is loosely inspired by the state management ideas of

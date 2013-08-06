@@ -9,14 +9,19 @@
 ;;;
 ;;; You must not remove this notice, or any other, from this software.
 
-(defproject redmapel "0.1.2"
+
+(defproject redmapel "0.1.3"
   :description "Redmapel manages trees of state."
-  :url "http://example.com/FIXME"
+  :url "https://github.com/deg/Redmapel"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo}
 
-  :dependencies [[org.clojure/clojure "1.5.1"]
+  :repositories {"clojars" {:url "https://clojars.org/redmapel"
+                            :username "deg" :password :gpg}}
+
+  :dependencies [;; Clojure itself
+                 [org.clojure/clojure "1.5.1"]
 
                  ;; Degel's Clojure utility library
                  [degel-clojure-utils "0.1.5"]]
