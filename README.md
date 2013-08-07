@@ -9,14 +9,14 @@ triggers to fire when elements of the tree have changed.
 Redmapel is small state tree library, named after the stunning [red
 maple
 tree](http://www.publicdomainpictures.net/view-image.php?image=12819&picture=red-maple-tree),
-the state tree of Rhode Island. (groan!)
+the offical tree of the small state of Rhode Island. (groan!)
 
 The misspelling is deliberate, to make it easier to search for
 Redmapel. Pronounciation: whatever you like in the privacy of your own
 room, but I favor rhyming with the French m'appelle. [see
 video](http://www.youtube.com/watch?v=5H59Py7KApU).
 
-For the latest version, include `[degel.redmapel "0.1.3"]` in your
+For the latest version, include `[degel.redmapel "0.1.4"]` in your
 `project.clj`.
 
 ## Background
@@ -46,7 +46,7 @@ side-effecting actions on an atom.
 
 The redmapel.node namespace contains a parallel, lower-level API that
 offers essentially the same behaviors, but on a regular immutable map
-structure. (Behind the scenese,the primary API relies on this API, and
+structure. (Behind the scenes,the primary API relies on this API, and
 is just careful to save results back into the designated atom).
 
 For full API details, see the source for now, or use `lein marg` to

@@ -9,9 +9,9 @@
 ;;;
 ;;; You must not remove this notice, or any other, from this software.
 
-(ns redmapel-test
+(ns degel.redmapel-test
   (:require [clojure.test :refer :all]
-            [redmapel :refer :all]))
+            [degel.redmapel :refer :all]))
 
 
 (deftest put-fetch

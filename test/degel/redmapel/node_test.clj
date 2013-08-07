@@ -9,9 +9,9 @@
 ;;;
 ;;; You must not remove this notice, or any other, from this software.
 
-(ns redmapel.node-test
+(ns degel.redmapel.node-test
   (:require [clojure.test :refer :all]
-            [redmapel.node :refer :all]))
+            [degel.redmapel.node :refer :all]))
 
 (deftest nodes
   (testing "Empty node"
@@ -37,9 +37,9 @@
 
 
 (deftest node-internals
-  (let [node-path #'redmapel.node/node-path
-        value-path #'redmapel.node/value-path
-        path-path #'redmapel.node/path-path]
+  (let [node-path #'degel.redmapel.node/node-path
+        value-path #'degel.redmapel.node/value-path
+        path-path #'degel.redmapel.node/path-path]
     (testing "Paths"
       (is (= (node-path [:a :b :c])
              [:children :a :children :b :children :c]))
