@@ -12,7 +12,7 @@
 
 (defproject redmapel "0.1.4"
   :description "Redmapel manages trees of state."
-  :url "https://github.com/deg/Redmapel"
+  :url "https://github.com/deg/redmapel"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo}
