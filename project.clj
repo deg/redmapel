@@ -10,15 +10,15 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 
-(defproject redmapel "0.1.6"
+(defproject redmapel "0.1.7"
   :description "Redmapel manages trees of state."
   :url "https://github.com/deg/redmapel"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo}
 
-  :repositories {"clojars" {:url "https://clojars.org/redmapel"
-                            :username "deg" :password :gpg}}
+  ;:repositories {"clojars" {:url "https://clojars.org"
+  ;                          :username "deg" :password :gpg}}
 
   :dependencies [;; Clojure itself
                  [org.clojure/clojure "1.5.1"]
