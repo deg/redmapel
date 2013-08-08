@@ -1,8 +1,13 @@
 # redmapel
 
-Redmapel is intended to be a simple single-purpose library. It is
-designed to let you easily manage a tree of related values and set
-triggers to fire when elements of the tree have changed.
+Redmapel is a simple, single-purpose, library designed to work in both
+Clojure and ClojureScript. It lets you easily manage a tree of related
+values and set triggers to fire when elements of the tree have
+changed.
+
+It is in-memory storage, with no built-in persistence to disk or
+net. But, its trigger mechanism makes it trivial to add automatic
+persistence.
 
 ## History and Naming
 
@@ -16,7 +21,7 @@ Redmapel. Pronounciation: whatever you like in the privacy of your own
 room, but I favor rhyming with the French m'appelle. [see
 video](http://www.youtube.com/watch?v=5H59Py7KApU).
 
-For the latest version, include `[degel.redmapel "0.1.5"]` in your
+For the latest version, include `[degel.redmapel "0.1.7"]` in your
 `project.clj`.
 
 ## Background
