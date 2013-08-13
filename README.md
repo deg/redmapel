@@ -65,6 +65,8 @@ API stabilizes.
 
 Copyright © 2013 David Goldfarb, deg@degel.com
 
+Distributed under the Eclipse Public License, the same as Clojure.
+
 The use and distribution terms for this software are covered by the
 [Eclipse Public License
 1.0](http://opensource.org/licenses/eclipse-1.0.php) which can be
