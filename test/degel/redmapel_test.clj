@@ -1,4 +1,4 @@
-;;; Copyright (c) David Goldfarb. All rights reserved.
+;;; Copyright (c) 2013, David Goldfarb. All rights reserved.
 ;;; Contact info: deg@degel.com
 ;;;
 ;;; The use and distribution terms for this software are covered by the Eclipse
