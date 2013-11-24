@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Build this entire project, from a clean base throught check-in and release
+
+git push
+git push kiln
+lein do clean, compile, deploy clojars

@@ -17,14 +17,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo}
 
-  ;:repositories {"clojars" {:url "https://clojars.org"
-  ;                          :username "deg" :password :gpg}}
-
-  :dependencies [;; Clojure itself
-                 [org.clojure/clojure "1.5.1"]
-
-                 ;; Degel's Clojure utility library
+  :dependencies [[org.clojure/clojure "1.5.1"]
                  [degel/degel-clojure-utils "0.1.17"]]
 
   :profiles {:dev
-             { :plugins [[lein-marginalia "0.7.1"]]}})
+             {:plugins [[lein-marginalia "0.7.1"]]}})
