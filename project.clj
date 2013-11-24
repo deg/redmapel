@@ -10,8 +10,8 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 
-(defproject redmapel "0.1.7"
-  :description "Redmapel manages trees of state."
+(defproject redmapel "0.1.8"
+  :description "DEPRECATED: Use degel/redmapel. Redmapel manages trees of state."
   :url "https://github.com/deg/redmapel"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"
