@@ -10,8 +10,8 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 
-(defproject redmapel "0.1.8"
-  :description "DEPRECATED: Use degel/redmapel. Redmapel manages trees of state."
+(defproject degel/redmapel "0.1.9"
+  :description "Redmapel manages trees of state."
   :url "https://github.com/deg/redmapel"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"
@@ -24,7 +24,7 @@
                  [org.clojure/clojure "1.5.1"]
 
                  ;; Degel's Clojure utility library
-                 [degel-clojure-utils "0.1.6"]]
+                 [degel/degel-clojure-utils "0.1.17"]]
 
   :profiles {:dev
              { :plugins [[lein-marginalia "0.7.1"]]}})
