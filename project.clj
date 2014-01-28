@@ -10,7 +10,7 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 
-(defproject degel/redmapel "0.1.13"
+(defproject degel/redmapel "0.1.14"
   :description "Redmapel manages trees of state."
   :url "https://github.com/deg/redmapel"
   :license {:name "Eclipse Public License"
@@ -18,10 +18,10 @@
             :distribution :repo}
 
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [degel/degel-clojure-utils "0.1.20"]]
+                 [degel/degel-clojure-utils "0.1.21"]]
 
   :min-lein-version "2.0.0"
-  ;:pedantic? :abort
+  :pedantic? :abort
 
   :main degel.redmapel.main
 
